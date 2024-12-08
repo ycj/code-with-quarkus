@@ -1,6 +1,10 @@
 package org.acme;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
@@ -11,7 +15,7 @@ class Greeting {
     public String message;
 }
 
-@Path("/hello")
+@Path("/")
 public class GreetingResource {
 
     @Inject
@@ -26,11 +30,17 @@ public class GreetingResource {
     @ConfigProperty(name = "password")
     String password;
 
+    @Inject
+    @RestClient
+    Zhgl zhgl;
+
     @GET
-    @Path("/greeting")
+    @Path("/hello")
     public Greeting hello() {
         var g = new Greeting();
         g.message = "Hello YZ";
+        var data = zhgl.GetUsers();
+        Log.info(data.toString());
         return g;
     }
 
@@ -40,5 +50,15 @@ public class GreetingResource {
         Log.info(t3.hello());
         Log.info(projectName + " " + projectVersion);
         return password;
+    }
+
+    @GET
+    @Path("/zhgl/userList")
+    public List<String> hello3() {
+        var data = new ArrayList<String>();
+        data.add("Hello");
+        data.add("Year");
+        data.add("2025");
+        return data;
     }
 }
